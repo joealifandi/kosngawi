@@ -42,7 +42,14 @@ function LoginForm() {
       <form onSubmit={submit} className="grid gap-4">
         {mode === 'register' && <input required placeholder="Nama Lengkap" className="bg-black/30 border border-white/10 p-4 outline-none focus:border-emerald-500" />}
         <input required type="email" placeholder="Email" className="bg-black/30 border border-white/10 p-4 outline-none focus:border-emerald-500" />
-        <input required type="password" placeholder="Password" className="bg-black/30 border border-white/10 p-4 outline-none focus:border-emerald-500" />
+        <div>
+          <input required type="password" placeholder="Password" className="w-full bg-black/30 border border-white/10 p-4 outline-none focus:border-emerald-500" />
+          {mode === 'login' && (
+            <div className="flex justify-end mt-2">
+              <button type="button" onClick={() => alert('Silakan hubungi Pemilik Kos / Admin untuk melakukan reset kata sandi akun Anda.')} className="text-xs text-emerald-400 hover:underline">Lupa Kata Sandi?</button>
+            </div>
+          )}
+        </div>
         {mode === 'register' && (
           <>
             <input required placeholder="No. HP" className="bg-black/30 border border-white/10 p-4 outline-none focus:border-emerald-500" />
