@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Mail, Phone, ShieldCheck, FileText, Wrench, Clock } from 'lucide-react';
 import { penghuni, kontrak, kamarKos, cabangKos, tagihan, laporanKerusakan } from '@/lib/data';
@@ -11,6 +11,7 @@ export default function TenantProfilePage({ params }: { params: Promise<{ id: st
   const resolvedParams = use(params);
   const tenantId = parseInt(resolvedParams.id, 10);
   const tnt = penghuni.find(p => p.id === tenantId);
+  const [isEditingKtp, setIsEditingKtp] = useState(false);
 
   if (!tnt) {
     return (
@@ -62,28 +63,58 @@ export default function TenantProfilePage({ params }: { params: Promise<{ id: st
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Identitas KTP */}
           <section className="bg-black/40 border border-white/10 p-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500 mb-6 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4" /> Data Identitas (KTP)
-            </h3>
-            <p className="text-sm text-white/80 font-mono bg-black/60 p-4 border border-white/10 mb-4 text-center tracking-widest">
-              {tnt.ktpNumber}
-            </p>
-            <div className="aspect-[1.6] bg-black/80 border border-white/10 relative overflow-hidden group mt-2 mb-6">
-              {tnt.ktpUrl ? (
-                <img src={tnt.ktpUrl} alt="Foto KTP" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer" />
-              ) : (
-                <div className="flex h-full items-center justify-center text-white/30 text-xs">Belum ada foto KTP</div>
-              )}
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4" /> Data Identitas (KTP)
+              </h3>
+              <button onClick={() => setIsEditingKtp(!isEditingKtp)} className="text-[10px] bg-white/10 hover:bg-white/20 px-3 py-1.5 uppercase font-bold tracking-widest transition-colors">
+                {isEditingKtp ? 'Batal' : 'Edit Data'}
+              </button>
             </div>
+            
+            {isEditingKtp ? (
+              <form onSubmit={e => { e.preventDefault(); alert('Data KTP & Wali berhasil diperbarui oleh Admin.'); setIsEditingKtp(false); }} className="space-y-4">
+                <div>
+                  <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Nomor Induk Kependudukan (NIK)</label>
+                  <input type="text" defaultValue={tnt.ktpNumber} className="w-full bg-black/60 border border-emerald-500/30 p-3 text-sm focus:border-emerald-500 outline-none" />
+                </div>
+                <div>
+                  <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Unggah Ulang Foto KTP</label>
+                  <input type="file" accept="image/*" className="w-full text-sm text-white/70 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-bold file:uppercase file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition-colors cursor-pointer outline-none bg-black/60 border border-emerald-500/30 p-2" />
+                </div>
+                <div className="pt-4 border-t border-white/10 mt-4">
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-3">Edit Kontak Wali</h4>
+                  <div className="grid grid-cols-1 gap-3">
+                    <input type="text" defaultValue={tnt.emergencyName} placeholder="Nama Wali" className="w-full bg-black/60 border border-emerald-500/30 p-3 text-sm focus:border-emerald-500 outline-none" />
+                    <input type="text" defaultValue={tnt.emergencyPhone} placeholder="No HP Wali" className="w-full bg-black/60 border border-emerald-500/30 p-3 text-sm focus:border-emerald-500 outline-none" />
+                    <input type="text" defaultValue={tnt.emergencyRelation} placeholder="Hubungan (Misal: Orang Tua)" className="w-full bg-black/60 border border-emerald-500/30 p-3 text-sm focus:border-emerald-500 outline-none" />
+                  </div>
+                </div>
+                <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 py-3 text-xs font-bold uppercase tracking-widest transition-colors mt-2">Simpan Perubahan</button>
+              </form>
+            ) : (
+              <>
+                <p className="text-sm text-white/80 font-mono bg-black/60 p-4 border border-white/10 mb-4 text-center tracking-widest">
+                  {tnt.ktpNumber}
+                </p>
+                <div className="aspect-[1.6] bg-black/80 border border-white/10 relative overflow-hidden group mt-2 mb-6">
+                  {tnt.ktpUrl ? (
+                    <img src={tnt.ktpUrl} alt="Foto KTP" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-white/30 text-xs">Belum ada foto KTP</div>
+                  )}
+                </div>
 
-            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500 mb-4 flex items-center gap-2 border-t border-white/10 pt-6">
-              <Phone className="w-4 h-4" /> Kontak Darurat (Wali)
-            </h3>
-            <div className="bg-black/60 p-4 border border-white/10 text-sm">
-              <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Nama Wali</span><span className="font-bold">{tnt.emergencyName || '-'}</span></div>
-              <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Hubungan</span><span>{tnt.emergencyRelation || '-'}</span></div>
-              <div className="flex justify-between"><span className="text-white/50">No. HP</span><span className="text-emerald-400 font-mono">{tnt.emergencyPhone || '-'}</span></div>
-            </div>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500 mb-4 flex items-center gap-2 border-t border-white/10 pt-6">
+                  <Phone className="w-4 h-4" /> Kontak Darurat (Wali)
+                </h3>
+                <div className="bg-black/60 p-4 border border-white/10 text-sm">
+                  <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Nama Wali</span><span className="font-bold">{tnt.emergencyName || '-'}</span></div>
+                  <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Hubungan</span><span>{tnt.emergencyRelation || '-'}</span></div>
+                  <div className="flex justify-between"><span className="text-white/50">No. HP</span><span className="text-emerald-400 font-mono">{tnt.emergencyPhone || '-'}</span></div>
+                </div>
+              </>
+            )}
           </section>
 
           {/* Riwayat Kontrak */}
