@@ -44,9 +44,14 @@ export default function TenantProfilePage({ params }: { params: Promise<{ id: st
                   <span className="flex items-center gap-1.5"><Phone className="w-4 h-4 text-emerald-400" /> {tnt.phone}</span>
                 </div>
               </div>
-              <span className="bg-emerald-500/10 text-emerald-400 px-4 py-2 border border-emerald-500/20 text-xs font-bold uppercase tracking-widest">
-                Penghuni Terdaftar
-              </span>
+              <div className="flex flex-col gap-2">
+                <span className="bg-emerald-500/10 text-emerald-400 px-4 py-2 border border-emerald-500/20 text-xs font-bold uppercase tracking-widest text-center">
+                  Penghuni Terdaftar
+                </span>
+                <button onClick={() => alert('Kontrak diputus paksa. Kamar dikosongkan dan penghuni masuk daftar hitam.')} className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 border border-red-500/20 text-xs font-bold uppercase tracking-widest text-center transition-colors">
+                  Putus Kontrak / Blacklist
+                </button>
+              </div>
             </div>
           </div>
         </div>

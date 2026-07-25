@@ -297,7 +297,12 @@ export default function OwnerDashboardPage() {
                                 <Eye className="w-3 h-3" /> Cek Bukti
                               </button>
                             ) : (
-                              <span className="text-white/20 text-xs font-medium">Menunggu</span>
+                              <button 
+                                onClick={() => alert('Pembayaran tunai diterima. Tagihan telah ditandai Lunas.')} 
+                                className="inline-flex items-center gap-1.5 text-yellow-400 hover:text-yellow-300 bg-yellow-400/10 px-3 py-2 rounded text-xs font-bold transition-colors"
+                              >
+                                <Wallet className="w-3 h-3" /> Lunas Tunai
+                              </button>
                             )}
                           </td>
                         </tr>
