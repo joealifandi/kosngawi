@@ -51,6 +51,33 @@ function LoginForm() {
               <label className="block text-xs text-white/50 uppercase tracking-widest mb-2">Unggah Foto KTP / Selfie KTP</label>
               <input required type="file" accept="image/*" className="w-full text-sm text-white/70 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition-colors cursor-pointer outline-none" />
             </div>
+
+            <div className="bg-emerald-950/30 border border-emerald-500/20 p-4 mt-2">
+              <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-3">Kontak Darurat (Wajib)</h3>
+              <div className="grid gap-3">
+                <input required placeholder="Nama Kontak Darurat" className="w-full bg-black/30 border border-white/10 p-3 text-sm outline-none focus:border-emerald-500" />
+                <input required placeholder="No. HP Darurat" className="w-full bg-black/30 border border-white/10 p-3 text-sm outline-none focus:border-emerald-500" />
+                <select required className="w-full bg-black/30 border border-white/10 p-3 text-sm text-white/70 outline-none focus:border-emerald-500">
+                  <option value="">Hubungan Keluarga...</option>
+                  <option value="Orang Tua">Orang Tua</option>
+                  <option value="Kakak/Adik">Kakak / Adik</option>
+                  <option value="Suami/Istri">Suami / Istri</option>
+                  <option value="Kerabat">Kerabat Lainnya</option>
+                </select>
+              </div>
+            </div>
+
+            <label className="flex items-start gap-3 mt-4 cursor-pointer group">
+              <div className="relative flex items-center justify-center mt-0.5">
+                <input required type="checkbox" className="sr-only peer" />
+                <div className="w-5 h-5 bg-black/30 border border-white/20 peer-checked:bg-emerald-600 peer-checked:border-emerald-500 rounded-sm transition-colors flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 bg-white scale-0 peer-checked:scale-100 transition-transform" style={{ clipPath: 'polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%)' }}></div>
+                </div>
+              </div>
+              <p className="text-xs text-white/60 leading-relaxed group-hover:text-white/80 transition-colors">
+                Saya menyetujui <a href="#" className="text-emerald-400 hover:underline">Syarat & Ketentuan</a> serta <a href="#" className="text-emerald-400 hover:underline">Tata Tertib Kos</a> yang berlaku di NGAWIKOST.
+              </p>
+            </label>
           </>
         )}
         <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 py-4 font-bold uppercase tracking-widest flex items-center justify-center gap-2">

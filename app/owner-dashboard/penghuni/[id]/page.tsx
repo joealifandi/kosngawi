@@ -60,12 +60,21 @@ export default function TenantProfilePage({ params }: { params: Promise<{ id: st
             <p className="text-sm text-white/80 font-mono bg-black/60 p-4 border border-white/10 mb-4 text-center tracking-widest">
               {tnt.ktpNumber}
             </p>
-            <div className="aspect-[1.6] bg-black/80 border border-white/10 relative overflow-hidden group mt-2">
+            <div className="aspect-[1.6] bg-black/80 border border-white/10 relative overflow-hidden group mt-2 mb-6">
               {tnt.ktpUrl ? (
                 <img src={tnt.ktpUrl} alt="Foto KTP" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer" />
               ) : (
                 <div className="flex h-full items-center justify-center text-white/30 text-xs">Belum ada foto KTP</div>
               )}
+            </div>
+
+            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500 mb-4 flex items-center gap-2 border-t border-white/10 pt-6">
+              <Phone className="w-4 h-4" /> Kontak Darurat (Wali)
+            </h3>
+            <div className="bg-black/60 p-4 border border-white/10 text-sm">
+              <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Nama Wali</span><span className="font-bold">{tnt.emergencyName || '-'}</span></div>
+              <div className="flex justify-between mb-2 pb-2 border-b border-white/5"><span className="text-white/50">Hubungan</span><span>{tnt.emergencyRelation || '-'}</span></div>
+              <div className="flex justify-between"><span className="text-white/50">No. HP</span><span className="text-emerald-400 font-mono">{tnt.emergencyPhone || '-'}</span></div>
             </div>
           </section>
 

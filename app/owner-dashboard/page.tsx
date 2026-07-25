@@ -11,6 +11,7 @@ const statusColor = {
   penuh: 'bg-blue-500/20 text-blue-300',
   menunggu_konfirmasi: 'bg-yellow-500/20 text-yellow-300',
   maintenance: 'bg-slate-500/20 text-slate-300',
+  di_booking: 'bg-orange-500/20 text-orange-300',
 };
 
 export default function OwnerDashboardPage() {
@@ -400,17 +401,39 @@ export default function OwnerDashboardPage() {
               <p className="text-xs text-white/50 mb-1">Kamar Disewa</p>
               <p className="font-bold">Kamar {kamarKos.find(k => k.id === showBuatKontrakModal.kamarId)?.nomor} ({formatRupiah(kamarKos.find(k => k.id === showBuatKontrakModal.kamarId)?.harga || 0)}/bln)</p>
             </div>
-            <form onSubmit={e => handleSimulasiSubmit(e, 'Kontrak berhasil dibuat! Calon penghuni kini resmi menjadi penyewa aktif dan tagihan pertama telah terbit.', setShowBuatKontrakModal)} className="space-y-4">
+            <form onSubmit={e => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const tipe = form.tipe_persetujuan.value;
+                if (tipe === 'booking') {
+                   handleSimulasiSubmit(e, 'Kamar kini berstatus Booking. Tagihan DP berhasil dibuat.', setShowBuatKontrakModal);
+                } else {
+                   handleSimulasiSubmit(e, 'Kontrak berhasil dibuat! Calon penghuni kini resmi menjadi penyewa aktif dan tagihan pertama telah terbit.', setShowBuatKontrakModal);
+                }
+            }} className="space-y-4">
               <div>
                 <label className="block text-sm text-white/60 mb-1">Tanggal Mulai Masuk</label>
                 <input required type="date" className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-sm text-white/60 mb-1">Uang Jaminan (Deposit)</label>
+                <label className="block text-sm text-white/60 mb-1">Uang Jaminan / DP Booking</label>
                 <input required type="number" defaultValue="1000000" className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500" />
-                <p className="text-[10px] text-white/40 mt-1">Uang ini akan ditahan dan dikembalikan saat check-out.</p>
+                <p className="text-[10px] text-white/40 mt-1">Uang ini akan ditahan dan dikembalikan saat check-out, atau menjadi DP booking.</p>
               </div>
-              <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 py-3 font-bold uppercase tracking-widest text-sm transition-colors mt-4">Aktifkan Kontrak</button>
+              <div>
+                <label className="block text-sm text-white/60 mb-2">Tipe Persetujuan</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex items-center gap-2 bg-black/50 border border-white/10 p-3 cursor-pointer hover:border-emerald-500 transition-colors">
+                    <input type="radio" name="tipe_persetujuan" value="booking" className="accent-emerald-500" />
+                    <span className="text-sm font-bold text-orange-400">Terima sbg Booking (DP)</span>
+                  </label>
+                  <label className="flex items-center gap-2 bg-black/50 border border-white/10 p-3 cursor-pointer hover:border-emerald-500 transition-colors">
+                    <input type="radio" name="tipe_persetujuan" value="aktif" defaultChecked className="accent-emerald-500" />
+                    <span className="text-sm font-bold text-emerald-400">Terima Penuh (Aktif)</span>
+                  </label>
+                </div>
+              </div>
+              <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 py-3 font-bold uppercase tracking-widest text-sm transition-colors mt-4">Proses Persetujuan</button>
             </form>
           </div>
         </div>

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertTriangle, ArrowLeft, CheckCircle2, CreditCard, FileText, Home, QrCode, Upload, Eye, X, Building2, Wrench, LogOut, Settings, User, Bell, Printer, Download } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, CreditCard, FileText, Home, QrCode, Upload, Eye, X, Building2, Wrench, LogOut, Settings, User, Bell, Printer, Download, ShieldCheck, ArrowRightLeft } from 'lucide-react';
 import { cabangKos, kamarKos, penghuni, tagihan, kontrak, laporanKerusakan, pengajuanCheckout } from '@/lib/data';
-import { Tagihan, LaporanKerusakan, PengajuanCheckout } from '@/lib/types';
+import { Tagihan, LaporanKerusakan, PengajuanCheckout, PengajuanPindahKamar } from '@/lib/types';
 
 const formatRupiah = (value: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
 
@@ -24,10 +24,15 @@ export default function TenantPortalPage() {
   // Modals state
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showTransferModal, setShowTransferModal] = useState(false);
   const [mtKategori, setMtKategori] = useState<'Listrik' | 'Air' | 'Furnitur' | 'Lainnya'>('Listrik');
   const [mtDeskripsi, setMtDeskripsi] = useState('');
   const [coTanggal, setCoTanggal] = useState('');
   const [coAlasan, setCoAlasan] = useState('');
+  const [tfTanggal, setTfTanggal] = useState('');
+  const [tfAlasan, setTfAlasan] = useState('');
+  const [tfKamarTujuan, setTfKamarTujuan] = useState(1);
+  const [transferRequests, setTransferRequests] = useState<PengajuanPindahKamar[]>([]);
   const [showReceiptModal, setShowReceiptModal] = useState<Tagihan | null>(null);
 
   const activeBill = billsState.find((t) => t.status === 'belum_bayar');
@@ -70,7 +75,24 @@ export default function TenantPortalPage() {
     };
     setCheckoutRequests([newCheckout, ...checkoutRequests]);
     setShowCheckoutModal(false);
-    alert('Pengajuan pindah/check-out berhasil dikirim. Menunggu persetujuan admin untuk proses uang jaminan (deposit).');
+    setCoAlasan('');
+    alert('Pengajuan check-out berhasil dikirim. Menunggu persetujuan admin untuk proses uang jaminan (deposit).');
+  };
+
+  const handleSubmitTransfer = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeContract) return;
+    const newRequest: PengajuanPindahKamar = {
+      id: Date.now(),
+      kontrakId: activeContract.id,
+      kamarTujuanId: tfKamarTujuan,
+      tanggalPindah: tfTanggal,
+      alasan: tfAlasan,
+      status: 'menunggu_persetujuan'
+    };
+    setTransferRequests([newRequest, ...transferRequests]);
+    setShowTransferModal(false);
+    alert('Pengajuan pindah kamar berhasil dikirim.');
   };
 
   const handleSimulasiSubmit = (e: React.FormEvent, msg: string) => {
@@ -122,6 +144,9 @@ export default function TenantPortalPage() {
               <button onClick={() => setShowMaintenanceModal(true)} className="flex-1 md:flex-none bg-slate-800 hover:bg-slate-700 border border-white/10 px-4 py-3 flex items-center justify-center gap-2 text-xs md:text-sm font-bold transition-colors">
                 <Wrench className="w-4 h-4" /> Lapor Kerusakan
               </button>
+              <button onClick={() => setShowTransferModal(true)} className="flex-1 md:flex-none bg-blue-900/40 text-blue-400 hover:bg-blue-900/60 border border-blue-500/20 px-4 py-3 flex items-center justify-center gap-2 text-xs md:text-sm font-bold transition-colors">
+                <ArrowRightLeft className="w-4 h-4" /> Pindah Kamar
+              </button>
               <button onClick={() => setShowCheckoutModal(true)} className="flex-1 md:flex-none bg-red-900/40 text-red-400 hover:bg-red-900/60 border border-red-500/20 px-4 py-3 flex items-center justify-center gap-2 text-xs md:text-sm font-bold transition-colors">
                 <LogOut className="w-4 h-4" /> Pengajuan Keluar
               </button>
@@ -156,6 +181,23 @@ export default function TenantPortalPage() {
                       <span className="uppercase tracking-widest text-[10px] md:text-xs font-bold px-2 py-1 bg-yellow-500/20 text-yellow-300 w-fit">{c.status.replace('_', ' ')}</span>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {transferRequests.length > 0 && (
+              <div className="bg-blue-500/10 border border-blue-500/30 p-5 md:p-6 mb-8 md:mb-10">
+                <h3 className="text-blue-400 font-bold mb-3 text-sm md:text-base">Status Pengajuan Pindah Kamar</h3>
+                <div className="space-y-2">
+                  {transferRequests.map(t => {
+                    const targetRoom = kamarKos.find(k => k.id === t.kamarTujuanId);
+                    return (
+                      <div key={t.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-black/30 p-3 md:p-4 text-xs md:text-sm gap-2">
+                        <span className="text-white/80">Pindah ke: <strong>Kamar {targetRoom?.nomor}</strong> pada {t.tanggalPindah}</span>
+                        <span className="uppercase tracking-widest text-[10px] md:text-xs font-bold px-2 py-1 bg-blue-500/20 text-blue-300 w-fit">{t.status.replace('_', ' ')}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -327,7 +369,35 @@ export default function TenantPortalPage() {
                   </div>
                 </div>
 
+                <div className="pt-4 border-t border-white/10 mt-4">
+                  <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-3">Kontak Darurat (Wali)</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div><label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Nama Wali</label><input type="text" defaultValue={tenant.emergencyName} className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" /></div>
+                    <div><label className="block text-xs text-white/50 uppercase tracking-widest mb-1">No. HP Wali</label><input type="text" defaultValue={tenant.emergencyPhone} className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" /></div>
+                    <div>
+                      <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Hubungan</label>
+                      <select defaultValue={tenant.emergencyRelation || 'Orang Tua'} className="w-full bg-black/40 border border-white/10 p-3 text-sm text-white/70 outline-none focus:border-emerald-500">
+                        <option value="Orang Tua">Orang Tua</option>
+                        <option value="Kakak/Adik">Kakak / Adik</option>
+                        <option value="Suami/Istri">Suami / Istri</option>
+                        <option value="Kerabat">Kerabat Lainnya</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="pt-4"><button type="submit" className="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 text-xs font-bold uppercase tracking-widest w-full sm:w-auto">Simpan Profil</button></div>
+              </form>
+            </div>
+
+            <div className="bg-[#082016] border border-white/10 p-6 mb-6">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-emerald-400" /> Keamanan Akun</h3>
+              <form onSubmit={e => handleSimulasiSubmit(e, 'Kata sandi berhasil diubah.')} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div><label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Kata Sandi Saat Ini</label><input required type="password" placeholder="••••••••" className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" /></div>
+                  <div><label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Kata Sandi Baru</label><input required type="password" placeholder="••••••••" className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" /></div>
+                </div>
+                <button type="submit" className="bg-black/50 border border-white/20 hover:border-emerald-500 px-6 py-3 text-xs font-bold uppercase tracking-widest w-full sm:w-auto transition-colors">Ubah Kata Sandi</button>
               </form>
             </div>
 
@@ -415,6 +485,37 @@ export default function TenantPortalPage() {
                 <textarea required value={coAlasan} onChange={e => setCoAlasan(e.target.value)} rows={3} placeholder="Contoh: Lulus kuliah, Pindah kerja..." className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500 resize-none"></textarea>
               </div>
               <button type="submit" className="w-full bg-red-900/60 hover:bg-red-900/80 text-red-100 py-3 font-bold uppercase tracking-widest text-sm transition-colors mt-4">Kirim Pengajuan</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showTransferModal && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#082016] border border-white/10 p-6 max-w-lg w-full relative shadow-2xl">
+            <button onClick={() => setShowTransferModal(false)} className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"><X /></button>
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><ArrowRightLeft className="w-5 h-5 text-blue-400" /> Form Pengajuan Pindah Kamar</h2>
+            <div className="bg-blue-500/10 border border-blue-500/30 p-4 mb-4 text-sm text-blue-300 leading-relaxed rounded">
+              <strong>Info:</strong> Pemindahan kamar bergantung pada ketersediaan kamar. Jika disetujui, harga kontrak akan disesuaikan dengan harga kamar baru.
+            </div>
+            <form onSubmit={handleSubmitTransfer} className="space-y-4">
+              <div>
+                <label className="block text-sm text-white/60 mb-1">Rencana Tanggal Pindah</label>
+                <input required type="date" value={tfTanggal} onChange={e => setTfTanggal(e.target.value)} className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500" />
+              </div>
+              <div>
+                <label className="block text-sm text-white/60 mb-1">Kamar Tujuan</label>
+                <select value={tfKamarTujuan} onChange={e => setTfKamarTujuan(Number(e.target.value))} className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500">
+                  {kamarKos.filter(k => k.status === 'tersedia' && k.cabangId === kos?.id).map(k => (
+                    <option key={k.id} value={k.id}>Kamar {k.nomor} - {k.tipe} ({k.ukuran})</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm text-white/60 mb-1">Alasan Pindah</label>
+                <textarea required value={tfAlasan} onChange={e => setTfAlasan(e.target.value)} rows={3} placeholder="Contoh: Ingin pindah lantai dasar..." className="w-full bg-black/50 border border-white/10 p-3 text-white outline-none focus:border-emerald-500 resize-none"></textarea>
+              </div>
+              <button type="submit" className="w-full bg-blue-900/60 hover:bg-blue-900/80 text-blue-100 py-3 font-bold uppercase tracking-widest text-sm transition-colors mt-4">Kirim Pengajuan</button>
             </form>
           </div>
         </div>

@@ -101,6 +101,9 @@ export const pengajuanSewa: PengajuanSewa[] = [
     phone: '081234567890',
     ktpNumber: '3276010101010001',
     ktpUrl: 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=400&auto=format&fit=crop',
+    emergencyName: 'Bapak Budi',
+    emergencyPhone: '085211112222',
+    emergencyRelation: 'Orang Tua',
     kamarId: 3,
     cabangId: 1,
     tanggalPengajuan: '2026-07-17',
@@ -118,6 +121,9 @@ export const penghuni: Penghuni[] = [
     ktpNumber: '3276020202020002',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop',
     ktpUrl: 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=400&auto=format&fit=crop',
+    emergencyName: 'Ibu Ratna',
+    emergencyPhone: '081233334444',
+    emergencyRelation: 'Orang Tua',
   },
 ];
 

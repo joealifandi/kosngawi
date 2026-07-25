@@ -11,7 +11,7 @@ export type CabangKos = {
   facilities: string[];
 };
 
-export type StatusKamar = 'tersedia' | 'penuh' | 'menunggu_konfirmasi' | 'maintenance';
+export type StatusKamar = 'tersedia' | 'penuh' | 'menunggu_konfirmasi' | 'maintenance' | 'di_booking';
 
 export type Kamar = {
   id: number;
@@ -35,6 +35,9 @@ export type Penghuni = {
   ktpNumber: string;
   avatar: string;
   ktpUrl?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
 };
 
 export type Kontrak = {
@@ -75,6 +78,9 @@ export type PengajuanSewa = {
   status: 'menunggu' | 'disetujui' | 'ditolak';
   pesan?: string;
   ktpUrl?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
 };
 
 export type Testimonial = {
@@ -135,4 +141,13 @@ export type PengajuanCheckout = {
   alasan: string;
   status: 'menunggu_persetujuan' | 'disetujui' | 'selesai';
   catatanOwner?: string;
+};
+
+export type PengajuanPindahKamar = {
+  id: number;
+  kontrakId: number;
+  kamarTujuanId: number;
+  tanggalPindah: string;
+  alasan: string;
+  status: 'menunggu_persetujuan' | 'disetujui' | 'selesai';
 };
