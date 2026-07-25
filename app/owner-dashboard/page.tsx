@@ -180,7 +180,10 @@ export default function OwnerDashboardPage() {
                           <p className="text-white/60 mb-1">Dari: Kamar {currentRoom?.nomor} <ArrowRightLeft className="inline w-3 h-3 mx-1" /> Ke: Kamar {targetRoom?.nomor}</p>
                           <p className="text-white/60 mb-1">Tgl Pindah: {p.tanggalPindah}</p>
                           <p className="text-white/60 mb-3">Alasan: {p.alasan}</p>
-                          <button onClick={() => alert('Pindah kamar disetujui! Harga kontrak telah disesuaikan dan tagihan baru diterbitkan.')} className="w-full bg-purple-600 hover:bg-purple-500 py-3 text-xs font-bold uppercase tracking-widest transition-colors">Setujui Kepindahan</button>
+                          <div className="flex gap-2 mt-4">
+                            <button onClick={() => alert('Pindah kamar disetujui! Harga kontrak telah disesuaikan dan tagihan baru diterbitkan.')} className="flex-1 bg-purple-600 hover:bg-purple-500 py-3 text-xs font-bold uppercase tracking-widest transition-colors">Setujui</button>
+                            <button onClick={() => alert('Pengajuan pindah kamar ditolak. Pemberitahuan telah dikirim ke penyewa.')} className="bg-red-900/40 text-red-400 border border-red-500/20 hover:bg-red-900/60 px-4 py-3 text-xs font-bold uppercase transition-colors">Tolak</button>
+                          </div>
                         </div>
                       );
                     })}
