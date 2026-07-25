@@ -123,6 +123,17 @@ export default function OwnerDashboardPage() {
                           <p className="text-white/80 font-bold">Mengajukan Sewa:</p>
                           <p className="text-white/60">Kamar {room?.nomor} - {kos?.name}</p>
                           <p className="text-white/60 mt-1 italic">"{p.pesan}"</p>
+                          
+                          <div className="mt-3 pt-3 border-t border-white/10">
+                            <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-1">Identitas KTP</p>
+                            <p className="text-white/80 font-mono text-xs">{p.ktpNumber || '-'}</p>
+                            <button onClick={() => setViewProofUrl(p.ktpUrl || 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=400&auto=format&fit=crop')} className="mt-2 text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded hover:bg-emerald-500/40 transition-colors">Lihat Foto KTP</button>
+                          </div>
+                          <div className="mt-3 pt-3 border-t border-white/10">
+                            <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-1">Kontak Wali</p>
+                            <p className="text-white/80 text-xs">{p.emergencyName || '-'} ({p.emergencyRelation || '-'})</p>
+                            <p className="text-white/60 text-xs font-mono">{p.emergencyPhone || '-'}</p>
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <button onClick={() => setShowBuatKontrakModal(p)} className="flex-1 bg-emerald-600 hover:bg-emerald-500 py-2.5 text-xs font-bold uppercase tracking-widest transition-colors">Setujui & Buat Kontrak</button>
