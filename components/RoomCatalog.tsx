@@ -13,6 +13,7 @@ const statusStyle = {
   penuh: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   menunggu_konfirmasi: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   maintenance: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  di_booking: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
 };
 
 const statusLabel = {
@@ -20,6 +21,7 @@ const statusLabel = {
   penuh: 'Penuh',
   menunggu_konfirmasi: 'Menunggu Konfirmasi',
   maintenance: 'Maintenance',
+  di_booking: 'Di-Booking',
 };
 
 export default function RoomCatalog() {
