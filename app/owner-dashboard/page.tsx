@@ -352,6 +352,27 @@ export default function OwnerDashboardPage() {
                 </label>
               </div>
             </div>
+
+            <div className="bg-[#082016] border border-white/10 p-6 mb-10">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-emerald-400" /> Keamanan Akun</h3>
+              <form onSubmit={e => handleSimulasiSubmit(e, 'Kata sandi Admin berhasil diperbarui.', () => {})} className="space-y-4">
+                <div>
+                  <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Kata Sandi Saat Ini</label>
+                  <input type="password" required className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Kata Sandi Baru</label>
+                    <input type="password" required minLength={6} className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 uppercase tracking-widest mb-1">Konfirmasi Kata Sandi Baru</label>
+                    <input type="password" required minLength={6} className="w-full bg-black/40 border border-white/10 p-3 text-sm focus:border-emerald-500 outline-none" />
+                  </div>
+                </div>
+                <button type="submit" className="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 text-xs font-bold uppercase tracking-widest mt-2">Ganti Kata Sandi</button>
+              </form>
+            </div>
           </div>
         )}
       </div>
