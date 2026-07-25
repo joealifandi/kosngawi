@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { AlertTriangle, CheckCircle2, Clock, DoorOpen, Home, Wallet, X, Eye, Wrench, LogOut, Plus, Settings, User, Building, Phone, Mail, ShieldCheck, Camera, Bell, FileText, UserPlus, Edit2, Calculator, FilePlus, Users } from 'lucide-react';
-import { cabangKos, kamarKos, pengajuanSewa, tagihan, laporanKerusakan, pengajuanCheckout, kontrak, penghuni } from '@/lib/data';
+import { AlertTriangle, CheckCircle2, Clock, DoorOpen, Home, Wallet, X, Eye, Wrench, LogOut, Plus, Settings, User, Building, Phone, Mail, ShieldCheck, Camera, Bell, FileText, UserPlus, Edit2, Calculator, FilePlus, Users, ArrowRightLeft } from 'lucide-react';
+import { cabangKos, kamarKos, pengajuanSewa, tagihan, laporanKerusakan, pengajuanCheckout, kontrak, penghuni, pengajuanPindahKamar } from '@/lib/data';
 
 const formatRupiah = (value: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
 
@@ -158,8 +158,36 @@ export default function OwnerDashboardPage() {
               </div>
             </section>
 
-            {/* Laporan Kerusakan & Check-out Pending */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-10">
+            {/* Laporan Kerusakan, Pindah Kamar, & Check-out Pending */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-10">
+              <section className="bg-purple-950/20 border border-purple-500/20 p-4 md:p-6">
+                <div className="flex items-center gap-3 mb-6"><ArrowRightLeft className="text-purple-400" /><h2 className="text-xl font-bold">Pindah Kamar</h2></div>
+                {pengajuanPindahKamar.length === 0 ? (
+                  <p className="text-white/40 text-sm">Tidak ada pengajuan pindah kamar.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {pengajuanPindahKamar.map(p => {
+                      const ktr = kontrak.find(k => k.id === p.kontrakId);
+                      const tnt = penghuni.find(t => t.id === ktr?.penghuniId);
+                      const currentRoom = kamarKos.find(k => k.id === ktr?.kamarId);
+                      const targetRoom = kamarKos.find(k => k.id === p.kamarTujuanId);
+                      return (
+                        <div key={p.id} className="bg-black/30 p-4 border border-white/5 text-sm">
+                          <div className="flex justify-between items-start mb-2">
+                            <Link href={`/owner-dashboard/penghuni/${tnt?.id}`} className="font-bold hover:text-emerald-400 underline decoration-white/20 underline-offset-4">{tnt?.nama}</Link>
+                            <span className="text-purple-300 text-[10px] font-bold uppercase tracking-widest bg-purple-500/20 px-2 py-1 rounded">{p.status.replace('_', ' ')}</span>
+                          </div>
+                          <p className="text-white/60 mb-1">Dari: Kamar {currentRoom?.nomor} <ArrowRightLeft className="inline w-3 h-3 mx-1" /> Ke: Kamar {targetRoom?.nomor}</p>
+                          <p className="text-white/60 mb-1">Tgl Pindah: {p.tanggalPindah}</p>
+                          <p className="text-white/60 mb-3">Alasan: {p.alasan}</p>
+                          <button onClick={() => alert('Pindah kamar disetujui! Harga kontrak telah disesuaikan dan tagihan baru diterbitkan.')} className="w-full bg-purple-600 hover:bg-purple-500 py-3 text-xs font-bold uppercase tracking-widest transition-colors">Setujui Kepindahan</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+
               <section className="bg-red-950/20 border border-red-500/20 p-4 md:p-6">
                 <div className="flex items-center gap-3 mb-6"><LogOut className="text-red-400" /><h2 className="text-xl font-bold">Pengajuan Check-out</h2></div>
                 {pengajuanCheckout.length === 0 ? (

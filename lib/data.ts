@@ -1,4 +1,4 @@
-import { CabangKos, Feature, GalleryImage, HeroSlide, Kamar, PengajuanSewa, Penghuni, Stat, Tagihan, Testimonial, Kontrak, LaporanKerusakan, PengajuanCheckout } from './types';
+import { CabangKos, Feature, GalleryImage, HeroSlide, Kamar, PengajuanSewa, Penghuni, Stat, Tagihan, Testimonial, Kontrak, LaporanKerusakan, PengajuanCheckout, PengajuanPindahKamar } from './types';
 
 export const cabangKos: CabangKos[] = [
   {
@@ -228,4 +228,15 @@ export const stats: Stat[] = [
   { id: 2, value: 13, suffix: '', label: 'Kamar Tersedia' },
   { id: 3, value: 2, suffix: '', label: 'Cabang Kos' },
   { id: 4, value: 98, suffix: '%', label: 'Kepuasan Penghuni' },
+];
+
+export const pengajuanPindahKamar: PengajuanPindahKamar[] = [
+  {
+    id: 1,
+    kontrakId: 1,
+    kamarTujuanId: 2,
+    tanggalPindah: '2026-08-01',
+    alasan: 'Ingin pindah ke kamar di lantai dasar karena lutut sering sakit.',
+    status: 'menunggu_persetujuan'
+  }
 ];
